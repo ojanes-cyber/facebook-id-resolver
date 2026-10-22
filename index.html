@@ -21,14 +21,8 @@
         *, *::before, *::after { box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
-            min-width: 320px;
-            min-height: 100vh;
-            background: #0b1220;
-            display: flex;
-            flex-direction: column;
-            -webkit-font-smoothing: antialiased;
+            margin: 0; padding: 0; min-width: 320px; min-height: 100vh;
+            background: #0b1220; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased;
         }
 
         button, input, select, textarea { font: inherit; }
@@ -36,268 +30,107 @@
         a { color: inherit; text-decoration: none; }
 
         .topbar {
-            border-bottom: 1px solid #202a3b;
-            background: #0f1726;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid #202a3b; background: #0f1726;
+            position: sticky; top: 0; z-index: 50; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .topbar-inner, main {
-            width: min(1200px, calc(100% - 32px));
-            margin: 0 auto;
-        }
-
-        .topbar-inner {
-            min-height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
+        .topbar-inner, main { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+        .topbar-inner { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .brand { display: flex; align-items: center; gap: 14px; }
         .brand-mark {
-            width: 42px;
-            height: 42px;
-            display: grid;
-            place-items: center;
-            border-radius: 12px;
-            background: linear-gradient(145deg, #2874ef, #1455c8);
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 800;
-            box-shadow: 0 4px 14px rgba(40, 116, 239, 0.4);
+            width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px;
+            background: linear-gradient(145deg, #2874ef, #1455c8); color: #ffffff; font-size: 16px; font-weight: 800;
         }
 
-        h1 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: #f8fafc;
-        }
-
+        h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: #f8fafc; }
         .topbar-note {
-            padding: 6px 14px;
-            border: 1px solid #27354a;
-            border-radius: 999px;
-            color: #aab8cd;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            background: #131d2e;
+            padding: 6px 14px; border: 1px solid #27354a; border-radius: 999px;
+            color: #aab8cd; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: #131d2e;
         }
 
-        main {
-            padding: 40px 0 64px;
-            flex: 1;
-        }
-
+        main { padding: 40px 0 64px; flex: 1; }
         .intro { margin-bottom: 20px; }
+        .eyebrow { margin: 0 0 8px; color: #72a9ff; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+        .intro h2 { margin: 0; font-size: clamp(22px, 3vw, 32px); letter-spacing: -0.03em; color: #f1f5f9; }
+        .section-label { font-size: 13px; font-weight: 700; color: #94a3b8; margin-top: 24px; margin-bottom: 10px; text-transform: uppercase; }
 
-        .eyebrow {
-            margin: 0 0 8px;
-            color: #72a9ff;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-        }
-
-        .intro h2 {
-            margin: 0;
-            font-size: clamp(22px, 3vw, 32px);
-            letter-spacing: -0.03em;
-            color: #f1f5f9;
-        }
-
-        .section-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: #94a3b8;
-            margin-top: 24px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Platform Selection Grid */
-        .platform-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
+        .platform-selection { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .platform-card {
-            border: 2px solid #223249;
-            border-radius: 12px;
-            background: #0d1726;
-            padding: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            border: 2px solid #223249; border-radius: 12px; background: #0d1726; padding: 14px;
+            cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 12px;
         }
-
         .platform-card:hover { border-color: #3a82f6; background: #12223c; }
-        .platform-card.active {
-            border-color: #2773e8;
-            background: #12223c;
-            box-shadow: 0 0 16px rgba(39, 115, 232, 0.25);
-        }
+        .platform-card.active { border-color: #2773e8; background: #12223c; box-shadow: 0 0 16px rgba(39, 115, 232, 0.25); }
 
-        .platform-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: grid;
-            place-items: center;
-            font-weight: 800;
-            font-size: 14px;
-        }
-
+        .platform-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-weight: 800; font-size: 14px; }
         .platform-fb { background: #1877f2; color: #fff; }
         .platform-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
         .platform-tw { background: #1da1f2; color: #fff; }
-
         .platform-name { font-size: 14px; font-weight: 700; color: #f1f5f9; }
 
-        /* Mode Selection Cards */
-        .mode-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-
+        .mode-selection { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
         .mode-card {
-            border: 2px solid #223249;
-            border-radius: 12px;
-            background: #0d1726;
-            padding: 18px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            border: 2px solid #223249; border-radius: 12px; background: #0d1726; padding: 18px;
+            cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 8px;
         }
-
         .mode-card:hover { border-color: #3a82f6; background: #12223c; }
-        .mode-card.active {
-            border-color: #2773e8;
-            background: #12223c;
-            box-shadow: 0 0 16px rgba(39, 115, 232, 0.25);
-        }
-
-        .mode-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
+        .mode-card.active { border-color: #2773e8; background: #12223c; box-shadow: 0 0 16px rgba(39, 115, 232, 0.25); }
+        .mode-card-header { display: flex; align-items: center; justify-content: space-between; }
         .mode-title { font-size: 15px; font-weight: 700; color: #f1f5f9; }
-
-        .mode-badge {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 6px;
-            background: #1e2d42;
-            color: #60a5fa;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
+        .mode-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: #1e2d42; color: #60a5fa; font-family: 'JetBrains Mono', monospace; }
         .mode-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
 
-        .panel {
-            border: 1px solid #253145;
-            border-radius: 16px;
-            background: #111b2b;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            margin-top: 22px;
-        }
-
+        .panel { border: 1px solid #253145; border-radius: 16px; background: #111b2b; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); margin-top: 22px; }
         .upload-panel { padding: 28px; }
-
-        .panel-heading {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
+        .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
         .panel-heading h3 { margin: 0; font-size: 17px; font-weight: 700; color: #f8fafc; }
         .panel-heading p { margin: 6px 0 0; color: #91a0b5; font-size: 13px; }
 
         .dropzone {
-            position: relative;
-            display: flex;
-            min-height: 130px;
-            margin-top: 20px;
-            padding: 20px;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed #334560;
-            border-radius: 14px;
-            background: #0d1726;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            position: relative; display: flex; min-height: 130px; margin-top: 20px; padding: 20px;
+            flex-direction: column; align-items: center; justify-content: center; border: 2px dashed #334560;
+            border-radius: 14px; background: #0d1726; text-align: center; cursor: pointer; transition: all 0.2s ease;
         }
-
         .dropzone:hover { border-color: #5295ff; background: #12223c; }
-
-        .upload-icon {
-            display: grid;
-            width: 40px;
-            height: 40px;
-            margin-bottom: 10px;
-            place-items: center;
-            border: 1px solid #283c5b;
-            border-radius: 12px;
-            background: #162640;
-            color: #74aaff;
-        }
-
+        .upload-icon { width: 40px; height: 40px; margin-bottom: 10px; display: grid; place-items: center; border: 1px solid #283c5b; border-radius: 12px; background: #162640; color: #74aaff; }
         .file-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-
-        .browse-button {
-            display: inline-flex; margin-top: 10px; padding: 7px 16px;
-            border: 1px solid #33445c; border-radius: 8px; background: #18263a;
-            color: #dbe8fa; font-size: 12px; font-weight: 600;
-        }
+        .browse-button { display: inline-flex; margin-top: 10px; padding: 7px 16px; border: 1px solid #33445c; border-radius: 8px; background: #18263a; color: #dbe8fa; font-size: 12px; font-weight: 600; }
 
         .file-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; list-style: none; padding: 0; }
-        .file-chip {
-            display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
-            border: 1px solid #2c3b51; border-radius: 8px; background: #142033; color: #bbc8da; font-size: 12px;
-        }
+        .file-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid #2c3b51; border-radius: 8px; background: #142033; color: #bbc8da; font-size: 12px; }
         .file-chip button { border: 0; background: none; color: #7f90a8; cursor: pointer; }
 
         .actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 22px; }
         .button-group { display: flex; gap: 10px; }
 
-        .primary-button, .pause-button, .resume-button, .stop-button, .export-button, .talkwalker-button {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            border: 0; border-radius: 999px; font-size: 13px; font-weight: 650; padding: 10px 22px;
-            transition: all 0.2s ease;
+        .primary-button, .pause-button, .resume-button, .stop-button, .clear-button, .export-button, .talkwalker-button {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; font-size: 13px; font-weight: 650; padding: 10px 22px; transition: all 0.2s ease;
         }
-
         .primary-button { background: #2773e8; color: #ffffff; box-shadow: 0 4px 14px rgba(39, 115, 232, 0.35); }
         .primary-button:disabled { cursor: not-allowed; opacity: 0.45; }
         .pause-button { background: #d97706; color: #ffffff; }
         .resume-button { background: #059669; color: #ffffff; }
         .stop-button { background: #dc2626; color: #ffffff; }
+        .clear-button { background: #334155; color: #cbd5e1; border: 1px solid #475569; }
+        .clear-button:hover { background: #475569; color: #ffffff; }
+
+        .autoscroll-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            cursor: pointer;
+            user-select: none;
+            background: #0d1726;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #223147;
+            transition: all 0.2s ease;
+        }
+        .autoscroll-toggle:hover { border-color: #3b82f6; color: #f1f5f9; }
+        .autoscroll-toggle input { accent-color: #2773e8; cursor: pointer; width: 15px; height: 15px; }
 
         .progress-panel { display: none; margin-top: 20px; padding: 20px 24px; }
         .progress-panel.visible { display: block; }
@@ -307,23 +140,14 @@
 
         .results-panel { display: none; margin-top: 26px; overflow: hidden; }
         .results-panel.visible { display: block; }
-
-        .results-heading {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 20px 24px; border-bottom: 1px solid #223147; background: #131f33;
-        }
-
-        .export-actions { display: flex; gap: 10px; }
-
+        .results-heading { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #223147; background: #131f33; }
+        .export-actions { display: flex; gap: 10px; align-items: center; }
         .export-button { background: #107c41; color: #d1fae5; border-radius: 8px; }
-        .export-button:disabled, .talkwalker-button:disabled { cursor: not-allowed; opacity: 0.45; }
-        
-        .talkwalker-button { background: #8b5cf6; color: #ffffff; border-radius: 8px; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); }
+        .talkwalker-button { background: #8b5cf6; color: #ffffff; border-radius: 8px; }
 
         .table-wrap { overflow-x: auto; max-height: 540px; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         thead { position: sticky; top: 0; background: #0d1726; z-index: 10; }
-
         th { padding: 14px 20px; color: #8393a9; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         td { padding: 13px 20px; border-top: 1px solid #1c283a; color: #cbd5e1; font-size: 13px; }
         tbody tr:hover { background: #162338; }
@@ -354,7 +178,6 @@
         <h2>Wählen Sie Plattform und Extraktionsmodus:</h2>
     </section>
 
-    <!-- Platform Selection -->
     <div class="section-label">1. Plattform auswählen:</div>
     <section class="platform-selection">
         <div class="platform-card active" id="platformFb" onclick="selectPlatform('facebook')">
@@ -371,7 +194,6 @@
         </div>
     </section>
 
-    <!-- Mode Cards -->
     <div class="section-label">2. Modus auswählen:</div>
     <section class="mode-selection">
         <div class="mode-card active" id="modeUsernameToIdCard" onclick="selectMode('username_to_id')">
@@ -395,7 +217,6 @@
         </div>
     </section>
 
-    <!-- Upload Panel -->
     <section class="panel upload-panel">
         <div class="panel-heading">
             <div>
@@ -404,7 +225,6 @@
             </div>
         </div>
 
-        <!-- Hidden Server URL Field -->
         <input type="hidden" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" />
 
         <form id="uploadForm" onsubmit="return false;">
@@ -420,7 +240,9 @@
             <ul class="file-list" id="fileList"></ul>
 
             <div class="actions">
-                <div></div>
+                <div>
+                    <button class="clear-button" id="clearFilesBtn" type="button" style="display:none;">Alles entfernen</button>
+                </div>
                 <div class="button-group">
                     <button class="pause-button" id="pauseBtn" type="button" style="display:none;">Pausieren</button>
                     <button class="resume-button" id="resumeBtn" type="button" style="display:none;">Fortsetzen</button>
@@ -433,7 +255,6 @@
         </form>
     </section>
 
-    <!-- Progress Panel -->
     <section class="panel progress-panel" id="progressPanel">
         <div class="progress-top">
             <span id="statusText">Verarbeitung wird vorbereitet …</span>
@@ -444,11 +265,14 @@
         </div>
     </section>
 
-    <!-- Results Panel -->
     <section class="panel results-panel" id="resultsPanel">
         <div class="results-heading">
             <h3>Ergebnisse (<span id="resultCount">0</span>)</h3>
             <div class="export-actions">
+                <label class="autoscroll-toggle" for="autoScrollToggle">
+                    <input type="checkbox" id="autoScrollToggle" checked />
+                    <span>Automatisches Mitscrolling</span>
+                </label>
                 <button class="talkwalker-button" id="talkwalkerBtn" type="button" disabled>für Talkwalker exportieren</button>
                 <button class="export-button" id="exportBtn" type="button" disabled>CSV exportieren</button>
             </div>
@@ -491,6 +315,7 @@ const resultBody = $("resultBody");
 const resultCount = $("resultCount");
 const exportBtn = $("exportBtn");
 const talkwalkerBtn = $("talkwalkerBtn");
+const clearFilesBtn = $("clearFilesBtn");
 
 let currentPlatform = "facebook";
 let currentMode = "username_to_id";
@@ -498,7 +323,6 @@ let loadedFiles = [];
 let processedResults = [];
 let allParsedEntries = [];
 
-// Loop State Control
 let currentIndex = 0;
 let isStopped = false;
 let isPaused = false;
@@ -525,7 +349,16 @@ function renderFiles() {
         fileList.appendChild(li);
     });
     processBtn.disabled = loadedFiles.length === 0;
+    if ($("clearFilesBtn")) {
+        $("clearFilesBtn").style.display = loadedFiles.length > 0 ? "inline-flex" : "none";
+    }
 }
+
+clearFilesBtn.addEventListener("click", () => {
+    loadedFiles = [];
+    fileInput.value = "";
+    renderFiles();
+});
 
 fileInput.addEventListener("change", () => {
     Array.from(fileInput.files).forEach(f => loadedFiles.push(f));
@@ -540,7 +373,10 @@ async function resolveViaServer(inputVal) {
     try {
         const resp = await fetch(`${serverBaseUrl}/resolve`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true"
+            },
             body: JSON.stringify({ 
                 platform: currentPlatform, 
                 mode: currentMode, 
@@ -615,7 +451,7 @@ async function runBatchLoop() {
         if (isPaused) return;
 
         const line = allParsedEntries[currentIndex];
-        statusText.textContent = `Verarbeite Eintrag ${currentIndex + 1} von ${total}... (${currentPlatform.toUpperCase()})`;
+        statusText.textContent = `Scrape Eintrag ${currentIndex + 1} von ${total}... (${currentPlatform.toUpperCase()})`;
 
         let res = await resolveViaServer(line);
 
@@ -638,9 +474,8 @@ async function runBatchLoop() {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
-        // Anti-blocking delay: If live scrape, delay 3.0s - 5.0s before processing next entry
-        if (res.source === "live" && currentIndex < total && !isStopped && !isPaused) {
-            const randomDelay = Math.floor(Math.random() * 2000) + 3000;
+        if (currentIndex < total && !isStopped && !isPaused && currentMode === "id_to_username" && res.source !== "cache") {
+            const randomDelay = Math.floor(Math.random() * 1500) + 3500;
             statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Eintrag...`;
             await sleep(randomDelay);
         }
@@ -679,9 +514,17 @@ function appendRow(r) {
         <td><span class="badge ${badgeCls}">${r.status}</span></td>
     `;
     resultBody.appendChild(tr);
+
+    // Auto-scrolling to newly added row when active
+    const autoScrollToggle = $("autoScrollToggle");
+    if (autoScrollToggle && autoScrollToggle.checked) {
+        const tableWrap = document.querySelector(".table-wrap");
+        if (tableWrap) {
+            tableWrap.scrollTop = tableWrap.scrollHeight;
+        }
+    }
 }
 
-// Standard CSV Export
 exportBtn.addEventListener("click", () => {
     const lines = [["Nr", "Plattform", "Link", "Account Name", "ID", "Quelle", "Status"].join(";")];
     processedResults.forEach(r => {
@@ -694,7 +537,6 @@ exportBtn.addEventListener("click", () => {
     a.click();
 });
 
-// Talkwalker Format Export (author_id:"12345" OR author_id:"67890")
 talkwalkerBtn.addEventListener("click", () => {
     const validIds = processedResults
         .map(r => r.id)
