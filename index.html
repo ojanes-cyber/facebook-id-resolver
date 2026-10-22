@@ -287,7 +287,7 @@
         .actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 22px; }
         .button-group { display: flex; gap: 10px; }
 
-        .primary-button, .pause-button, .resume-button, .stop-button, .export-button {
+        .primary-button, .pause-button, .resume-button, .stop-button, .export-button, .talkwalker-button {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             border: 0; border-radius: 999px; font-size: 13px; font-weight: 650; padding: 10px 22px;
             transition: all 0.2s ease;
@@ -313,7 +313,12 @@
             padding: 20px 24px; border-bottom: 1px solid #223147; background: #131f33;
         }
 
+        .export-actions { display: flex; gap: 10px; }
+
         .export-button { background: #107c41; color: #d1fae5; border-radius: 8px; }
+        .export-button:disabled, .talkwalker-button:disabled { cursor: not-allowed; opacity: 0.45; }
+        
+        .talkwalker-button { background: #8b5cf6; color: #ffffff; border-radius: 8px; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3); }
 
         .table-wrap { overflow-x: auto; max-height: 540px; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -443,7 +448,10 @@
     <section class="panel results-panel" id="resultsPanel">
         <div class="results-heading">
             <h3>Ergebnisse (<span id="resultCount">0</span>)</h3>
-            <button class="export-button" id="exportBtn" type="button" disabled>CSV exportieren</button>
+            <div class="export-actions">
+                <button class="talkwalker-button" id="talkwalkerBtn" type="button" disabled>für Talkwalker exportieren</button>
+                <button class="export-button" id="exportBtn" type="button" disabled>CSV exportieren</button>
+            </div>
         </div>
 
         <div class="table-wrap">
@@ -482,6 +490,7 @@ const resultsPanel = $("resultsPanel");
 const resultBody = $("resultBody");
 const resultCount = $("resultCount");
 const exportBtn = $("exportBtn");
+const talkwalkerBtn = $("talkwalkerBtn");
 
 let currentPlatform = "facebook";
 let currentMode = "username_to_id";
@@ -648,6 +657,7 @@ function finishProcessing(msg) {
     stopBtn.style.display = "none";
     processBtn.style.display = "inline-flex";
     exportBtn.disabled = processedResults.length === 0;
+    talkwalkerBtn.disabled = processedResults.length === 0;
     statusText.textContent = msg;
 }
 
@@ -671,6 +681,7 @@ function appendRow(r) {
     resultBody.appendChild(tr);
 }
 
+// Standard CSV Export
 exportBtn.addEventListener("click", () => {
     const lines = [["Nr", "Plattform", "Link", "Account Name", "ID", "Quelle", "Status"].join(";")];
     processedResults.forEach(r => {
@@ -680,6 +691,27 @@ exportBtn.addEventListener("click", () => {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `${currentPlatform}-ergebnisse.csv`;
+    a.click();
+});
+
+// Talkwalker Format Export (author_id:"12345" OR author_id:"67890")
+talkwalkerBtn.addEventListener("click", () => {
+    const validIds = processedResults
+        .map(r => r.id)
+        .filter(id => id && id !== "–" && id !== "");
+
+    if (!validIds.length) {
+        alert("Keine gültigen Author IDs zum Exportieren vorhanden.");
+        return;
+    }
+
+    const formattedIds = validIds.map(id => `author_id:"${id}"`);
+    const talkwalkerQuery = formattedIds.join(" OR ");
+
+    const blob = new Blob([talkwalkerQuery], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `talkwalker_author_ids_${currentPlatform}.txt`;
     a.click();
 });
 </script>
