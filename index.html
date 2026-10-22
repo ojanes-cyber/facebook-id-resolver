@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#0b1220" />
     <title>Social Media Entity Resolver – FB, IG & Twitter/X</title>
     
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap)" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -108,6 +108,9 @@
         }
         .primary-button { background: #2773e8; color: #ffffff; box-shadow: 0 4px 14px rgba(39, 115, 232, 0.35); }
         .primary-button:disabled { cursor: not-allowed; opacity: 0.45; }
+        .pause-button { background: #d97706; color: #ffffff; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35); }
+        .resume-button { background: #059669; color: #ffffff; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35); }
+        .stop-button { background: #dc2626; color: #ffffff; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35); }
         .clear-button { background: #334155; color: #cbd5e1; border: 1px solid #475569; }
         .clear-button:hover { background: #475569; color: #ffffff; }
         .cache-clear-button { background: #b91c1c; color: #fef2f2; border: 1px solid #ef4444; }
@@ -211,7 +214,7 @@
             </div>
         </div>
 
-        <input type="hidden" id="serverUrlInput" value="[https://cradle-majesty-diffuser.ngrok-free.dev](https://cradle-majesty-diffuser.ngrok-free.dev)" />
+        <input type="hidden" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" />
 
         <form id="uploadForm" onsubmit="return false;">
             <label class="dropzone" id="dropzone" for="fileInput">
@@ -231,6 +234,9 @@
                     <button class="clear-button cache-clear-button" id="clearCacheBtn" type="button">🗑️ DB-Cache leeren</button>
                 </div>
                 <div class="button-group">
+                    <button class="pause-button" id="pauseBtn" type="button" style="display:none;">Pausieren</button>
+                    <button class="resume-button" id="resumeBtn" type="button" style="display:none;">Fortsetzen</button>
+                    <button class="stop-button" id="stopBtn" type="button" style="display:none;">Stoppen</button>
                     <button class="primary-button" id="processBtn" type="button" disabled>
                         <span>Verarbeitung starten</span>
                     </button>
@@ -286,6 +292,9 @@ const $ = id => document.getElementById(id);
 const fileInput = $("fileInput");
 const dropzone = $("dropzone");
 const fileList = $("fileList");
+const pauseBtn = $("pauseBtn");
+const resumeBtn = $("resumeBtn");
+const stopBtn = $("stopBtn");
 const processBtn = $("processBtn");
 const progressPanel = $("progressPanel");
 const statusText = $("statusText");
@@ -304,6 +313,10 @@ let currentMode = "username_to_id";
 let loadedFiles = [];
 let processedResults = [];
 let allParsedEntries = [];
+
+let currentIndex = 0;
+let isStopped = false;
+let isPaused = false;
 
 function selectPlatform(platform) {
     currentPlatform = platform;
@@ -394,6 +407,7 @@ processBtn.addEventListener("click", async () => {
     processedResults = [];
     resultBody.innerHTML = "";
     allParsedEntries = [];
+    currentIndex = 0;
 
     for (const f of loadedFiles) {
         const text = await f.text();
@@ -407,13 +421,49 @@ processBtn.addEventListener("click", async () => {
 
     if (!allParsedEntries.length) return;
 
+    isStopped = false;
+    isPaused = false;
+
+    processBtn.style.display = "none";
+    pauseBtn.style.display = "inline-flex";
+    resumeBtn.style.display = "none";
+    stopBtn.style.display = "inline-flex";
+
     progressPanel.classList.add("visible");
     resultsPanel.classList.add("visible");
 
+    runBatchLoop();
+});
+
+pauseBtn.addEventListener("click", () => {
+    isPaused = true;
+    pauseBtn.style.display = "none";
+    resumeBtn.style.display = "inline-flex";
+    statusText.textContent = "Verarbeitung pausiert...";
+});
+
+resumeBtn.addEventListener("click", () => {
+    isPaused = false;
+    resumeBtn.style.display = "none";
+    pauseBtn.style.display = "inline-flex";
+    runBatchLoop();
+});
+
+stopBtn.addEventListener("click", () => {
+    isStopped = true;
+    isPaused = false;
+    finishProcessing("Verarbeitung gestoppt.");
+});
+
+async function runBatchLoop() {
     const total = allParsedEntries.length;
-    for (let i = 0; i < total; i++) {
-        const line = allParsedEntries[i];
-        statusText.textContent = `Verarbeite Eintrag ${i + 1} von ${total}... (${currentPlatform.toUpperCase()})`;
+
+    while (currentIndex < total) {
+        if (isStopped) break;
+        if (isPaused) return;
+
+        const line = allParsedEntries[currentIndex];
+        statusText.textContent = `Verarbeite Eintrag ${currentIndex + 1} von ${total}... (${currentPlatform.toUpperCase()})`;
 
         let res = await resolveViaServer(line);
 
@@ -421,7 +471,7 @@ processBtn.addEventListener("click", async () => {
         let displayId = (res.id && /^\d+$/.test(res.id)) ? res.id : "–";
 
         const item = {
-            nr: i + 1,
+            nr: currentIndex + 1,
             platform: currentPlatform.toUpperCase(),
             url: res.url || line,
             name: res.name || "–",
@@ -433,23 +483,29 @@ processBtn.addEventListener("click", async () => {
         processedResults.push(item);
         appendRow(item);
 
-        const pct = Math.round(((i + 1) / total) * 100);
+        currentIndex++;
+        const pct = Math.round((currentIndex / total) * 100);
         progressBar.style.width = pct + "%";
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
         // Human-like pause (5.0s - 7.0s) during live scrapes to prevent IP blocking
-        if (i < total - 1 && res.source === "live") {
+        if (currentIndex < total && !isStopped && !isPaused && res.source === "live") {
             const randomDelay = Math.floor(Math.random() * 2000) + 5000;
             statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Live-Eintrag...`;
             await sleep(randomDelay);
         }
     }
 
-    finishProcessing("Verarbeitung abgeschlossen!");
-});
+    if (currentIndex >= total) {
+        finishProcessing("Verarbeitung abgeschlossen!");
+    }
+}
 
 function finishProcessing(msg) {
+    pauseBtn.style.display = "none";
+    resumeBtn.style.display = "none";
+    stopBtn.style.display = "none";
     processBtn.style.display = "inline-flex";
     exportBtn.disabled = processedResults.length === 0;
     talkwalkerBtn.disabled = processedResults.length === 0;
