@@ -654,10 +654,10 @@ async function runBatchLoop() {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
-        // Anti-blocking pause: If live scrape, delay 3.0s - 5.0s before processing next entry
+        // Anti-blocking delay: If live scrape, delay 3.0s - 5.0s before processing next entry
         if (res.source === "live" && currentIndex < total && !isStopped && !isPaused) {
             const randomDelay = Math.floor(Math.random() * 2000) + 3000;
-            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) um Rate-Limits zu vermeiden...`;
+            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Eintrag...`;
             await sleep(randomDelay);
         }
     }
