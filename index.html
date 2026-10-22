@@ -113,6 +113,8 @@
         .stop-button { background: #dc2626; color: #ffffff; }
         .clear-button { background: #334155; color: #cbd5e1; border: 1px solid #475569; }
         .clear-button:hover { background: #475569; color: #ffffff; }
+        .cache-clear-button { background: #b91c1c; color: #fef2f2; border: 1px solid #ef4444; }
+        .cache-clear-button:hover { background: #dc2626; }
 
         .autoscroll-toggle {
             display: inline-flex;
@@ -240,9 +242,9 @@
             <ul class="file-list" id="fileList"></ul>
 
             <div class="actions">
-                <div>
+                <div style="display:flex; gap:10px;">
                     <button class="clear-button" id="clearFilesBtn" type="button" style="display:none;">Alles entfernen</button>
-                    <button class="clear-button" id="clearCacheBtn" type="button" style="background:#475569; color:#f8fafc; border-color:#64748b; margin-left:8px;">Cache leeren</button>
+                    <button class="clear-button cache-clear-button" id="clearCacheBtn" type="button">🗑️ DB-Cache leeren</button>
                 </div>
                 <div class="button-group">
                     <button class="pause-button" id="pauseBtn" type="button" style="display:none;">Pausieren</button>
@@ -317,6 +319,7 @@ const resultCount = $("resultCount");
 const exportBtn = $("exportBtn");
 const talkwalkerBtn = $("talkwalkerBtn");
 const clearFilesBtn = $("clearFilesBtn");
+const clearCacheBtn = $("clearCacheBtn");
 
 let currentPlatform = "facebook";
 let currentMode = "username_to_id";
@@ -350,12 +353,11 @@ function renderFiles() {
         fileList.appendChild(li);
     });
     processBtn.disabled = loadedFiles.length === 0;
-    if ($("clearFilesBtn")) {
-        $("clearFilesBtn").style.display = loadedFiles.length > 0 ? "inline-flex" : "none";
+    if (clearFilesBtn) {
+        clearFilesBtn.style.display = loadedFiles.length > 0 ? "inline-flex" : "none";
     }
 }
 
-const clearCacheBtn = $("clearCacheBtn");
 if (clearCacheBtn) {
     clearCacheBtn.addEventListener("click", async () => {
         if (!confirm("Möchten Sie den gesamten Datenbank-Cache wirklich leeren?")) return;
@@ -369,7 +371,7 @@ if (clearCacheBtn) {
                 }
             });
             const data = await resp.json();
-            alert(data.message || "Cache geleert!");
+            alert(data.message || "Datenbank-Cache erfolgreich geleert!");
         } catch (e) {
             alert("Fehler beim Leeren des Caches.");
         }
@@ -479,7 +481,7 @@ async function runBatchLoop() {
 
         let displayId = res.id;
         if (!displayId || displayId === "–") {
-            displayId = "–";
+            displayId = line.replace(/https?:\/\/(www\.)?(facebook|instagram|x|twitter)\.com\//, '').replace(/\/$/, '');
         }
 
         const item = {
