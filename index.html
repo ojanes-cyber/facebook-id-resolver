@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1220" />
+    <title>Facebook Entity Resolver – Bidirectional Web App</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0b1220;
+            color: #eef3fc;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-width: 320px;
+            min-height: 100vh;
+            background: #0b1220;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, input, select, textarea { font: inherit; }
+        button { cursor: pointer; border: none; outline: none; }
+        a { color: inherit; text-decoration: none; }
+
+        .topbar {
+            border-bottom: 1px solid #202a3b;
+            background: #0f1726;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .topbar-inner, main {
+            width: min(1200px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar-inner {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #2874ef, #1455c8);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(40, 116, 239, 0.4);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #f8fafc;
+        }
+
+        .topbar-note {
+            padding: 6px 14px;
+            border: 1px solid #27354a;
+            border-radius: 999px;
+            color: #aab8cd;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: #131d2e;
+        }
+
+        main {
+            padding: 40px 0 64px;
+            flex: 1;
+        }
+
+        .intro { margin-bottom: 24px; }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #72a9ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .intro h2 {
+            margin: 0;
+            font-size: clamp(24px, 3.5vw, 36px);
+            letter-spacing: -0.03em;
+            color: #f1f5f9;
+        }
+
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .mode-card {
+            border: 2px solid #223249;
+            border-radius: 12px;
+            background: #0d1726;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mode-card:hover {
+            border-color: #3a82f6;
+            background: #12223c;
+        }
+
+        .mode-card.active {
+            border-color: #2773e8;
+            background: #12223c;
+            box-shadow: 0 0 16px rgba(39, 115, 232, 0.25);
+        }
+
+        .mode-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-title { font-size: 15px; font-weight: 700; color: #f1f5f9; }
+
+        .mode-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #1e2d42;
+            color: #60a5fa;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .mode-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+
+        .panel {
+            border: 1px solid #253145;
+            border-radius: 16px;
+            background: #111b2b;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            margin-top: 22px;
+        }
+
+        .upload-panel { padding: 28px; }
+
+        .panel-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .panel-heading h3 { margin: 0; font-size: 17px; font-weight: 700; color: #f8fafc; }
+        .panel-heading p { margin: 6px 0 0; color: #91a0b5; font-size: 13px; }
+
+        .server-config-box {
+            margin-top: 18px;
+            padding: 16px;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            background: #0c192d;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .server-config-box label { font-size: 12px; font-weight: 700; color: #60a5fa; }
+        .server-config-box input {
+            padding: 8px 12px;
+            border: 1px solid #223249;
+            border-radius: 8px;
+            background: #09111e;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .dropzone {
+            position: relative;
+            display: flex;
+            min-height: 130px;
+            margin-top: 20px;
+            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #334560;
+            border-radius: 14px;
+            background: #0d1726;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .dropzone:hover { border-color: #5295ff; background: #12223c; }
+
+        .upload-icon {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+            place-items: center;
+            border: 1px solid #283c5b;
+            border-radius: 12px;
+            background: #162640;
+            color: #74aaff;
+        }
+
+        .file-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+        .browse-button {
+            display: inline-flex; margin-top: 10px; padding: 7px 16px;
+            border: 1px solid #33445c; border-radius: 8px; background: #18263a;
+            color: #dbe8fa; font-size: 12px; font-weight: 600;
+        }
+
+        .file-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; list-style: none; padding: 0; }
+        .file-chip {
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
+            border: 1px solid #2c3b51; border-radius: 8px; background: #142033; color: #bbc8da; font-size: 12px;
+        }
+        .file-chip button { border: 0; background: none; color: #7f90a8; cursor: pointer; }
+
+        .actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 22px; }
+        .button-group { display: flex; gap: 10px; }
+
+        .primary-button, .stop-button, .export-button {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            border: 0; border-radius: 999px; font-size: 13px; font-weight: 650; padding: 10px 22px;
+        }
+
+        .primary-button { background: #2773e8; color: #ffffff; box-shadow: 0 4px 14px rgba(39, 115, 232, 0.35); }
+        .primary-button:disabled { cursor: not-allowed; opacity: 0.45; }
+        .stop-button { background: #dc2626; color: #ffffff; }
+
+        .progress-panel { display: none; margin-top: 20px; padding: 20px 24px; }
+        .progress-panel.visible { display: block; }
+        .progress-top { display: flex; justify-content: space-between; color: #a9b8cc; font-size: 13px; }
+        .progress-track { height: 8px; margin-top: 12px; border-radius: 999px; background: #1e2a3b; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #2773e8, #38daf0); }
+
+        .results-panel { display: none; margin-top: 26px; overflow: hidden; }
+        .results-panel.visible { display: block; }
+
+        .results-heading {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 24px; border-bottom: 1px solid #223147; background: #131f33;
+        }
+
+        .export-button { background: #107c41; color: #d1fae5; border-radius: 8px; }
+
+        .table-wrap { overflow-x: auto; max-height: 540px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        thead { position: sticky; top: 0; background: #0d1726; z-index: 10; }
+
+        th { padding: 14px 20px; color: #8393a9; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        td { padding: 13px 20px; border-top: 1px solid #1c283a; color: #cbd5e1; font-size: 13px; }
+        tbody tr:hover { background: #162338; }
+
+        .numeric-id { color: #60a5fa; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+        .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+        .badge-ok { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-warn { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-cache { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .badge-instant { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="brand">
+            <div class="brand-mark">FB</div>
+            <h1>Facebook Entity Resolver</h1>
+        </div>
+        <div class="topbar-note">BIDIRECTIONAL & CACHED</div>
+    </div>
+</header>
+
+<main>
+    <section class="intro">
+        <p class="eyebrow">Bidirektionale Namens- & ID-Auflösung</p>
+        <h2>Wählen Sie den gewünschten Extraktionsmodus:</h2>
+    </section>
+
+    <!-- Mode Cards -->
+    <section class="mode-selection">
+        <div class="mode-card active" id="modeUsernameToIdCard" onclick="selectMode('username_to_id')">
+            <div class="mode-card-header">
+                <span class="mode-title">1. Link / Name &rarr; ID</span>
+                <span class="mode-badge">SOFORT &middot; SCHNELL</span>
+            </div>
+            <div class="mode-desc">
+                Extrahiert numerische Facebook-IDs direkt aus hochgeladenen Links oder Kanalnamen.
+            </div>
+        </div>
+
+        <div class="mode-card" id="modeIdToUsernameCard" onclick="selectMode('id_to_username')">
+            <div class="mode-card-header">
+                <span class="mode-title">2. Link / ID &rarr; Seitenname</span>
+                <span class="mode-badge">LIVE SCRAPE / DB CACHE</span>
+            </div>
+            <div class="mode-desc">
+                Läd zu jedem Facebook-Link oder ID den echten Seitennamen live oder aus dem Datenbank-Cache.
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Panel -->
+    <section class="panel upload-panel">
+        <div class="panel-heading">
+            <div>
+                <h3>Dateien hinzufügen</h3>
+                <p id="modeInstructionText">Dateien mit Facebook-Links oder Kanalnamen hochladen.</p>
+            </div>
+        </div>
+
+        <div class="server-config-box">
+            <label for="serverUrlInput">API-Server URL (Ihr VPS):</label>
+            <input type="text" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" placeholder="https://cradle-majesty-diffuser.ngrok-free.dev" />
+        </div>
+
+        <form id="uploadForm" onsubmit="return false;">
+            <label class="dropzone" id="dropzone" for="fileInput">
+                <span class="upload-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M5 14.5v3A2.5 2.5 0 0 0 7.5 20h9a2.5 2.5 0 0 0 2.5-2.5v-3"/></svg>
+                </span>
+                <span style="font-size:14px; font-weight:600;">Dateien auswählen oder hier ablegen</span>
+                <span class="browse-button">Dateien durchsuchen</span>
+            </label>
+            <input class="file-input" type="file" id="fileInput" multiple accept=".csv,.txt" />
+            
+            <ul class="file-list" id="fileList"></ul>
+
+            <div class="actions">
+                <div></div>
+                <div class="button-group">
+                    <button class="stop-button" id="stopBtn" type="button" style="display:none;">Stoppen</button>
+                    <button class="primary-button" id="processBtn" type="button" disabled>
+                        <span>Verarbeitung starten</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Progress Panel -->
+    <section class="panel progress-panel" id="progressPanel">
+        <div class="progress-top">
+            <span id="statusText">Verarbeitung wird vorbereitet …</span>
+            <strong id="progressPercent">0 %</strong>
+        </div>
+        <div class="progress-track">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </section>
+
+    <!-- Results Panel -->
+    <section class="panel results-panel" id="resultsPanel">
+        <div class="results-heading">
+            <h3>Ergebnisse (<span id="resultCount">0</span>)</h3>
+            <button class="export-button" id="exportBtn" type="button" disabled>CSV exportieren</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">#</th>
+                        <th>Link</th>
+                        <th>Seitenname / Channel</th>
+                        <th>ID</th>
+                        <th>Quelle</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="resultBody"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const fileInput = $("fileInput");
+const dropzone = $("dropzone");
+const fileList = $("fileList");
+const stopBtn = $("stopBtn");
+const processBtn = $("processBtn");
+const progressPanel = $("progressPanel");
+const statusText = $("statusText");
+const progressBar = $("progressBar");
+const progressPercent = $("progressPercent");
+const resultsPanel = $("resultsPanel");
+const resultBody = $("resultBody");
+const resultCount = $("resultCount");
+const exportBtn = $("exportBtn");
+
+let currentMode = "username_to_id";
+let loadedFiles = [];
+let processedResults = [];
+let allParsedEntries = [];
+let isStopped = false;
+
+function selectMode(mode) {
+    currentMode = mode;
+    $("modeUsernameToIdCard").classList.toggle("active", mode === "username_to_id");
+    $("modeIdToUsernameCard").classList.toggle("active", mode === "id_to_username");
+    
+    if (mode === "id_to_username") {
+        $("modeInstructionText").textContent = "Laden Sie Dateien mit Links oder IDs hoch, um die Seitennamen live zu ermitteln.";
+    } else {
+        $("modeInstructionText").textContent = "Laden Sie Dateien mit Facebook-Links oder Namen hoch, um numerische IDs offline/schnell zu extrahieren.";
+    }
+}
+
+function renderFiles() {
+    fileList.textContent = "";
+    loadedFiles.forEach((f, idx) => {
+        const li = document.createElement("li");
+        li.className = "file-chip";
+        li.innerHTML = `<span>${f.name}</span> <button onclick="loadedFiles.splice(${idx},1); renderFiles();">×</button>`;
+        fileList.appendChild(li);
+    });
+    processBtn.disabled = loadedFiles.length === 0;
+}
+
+fileInput.addEventListener("change", () => {
+    Array.from(fileInput.files).forEach(f => loadedFiles.push(f));
+    fileInput.value = "";
+    renderFiles();
+});
+
+function extractNumericId(url) {
+    if (!url) return "";
+    const cleanUrl = url.trim();
+    try {
+        const matchParam = cleanUrl.match(/[?&]id=(\d+)/i);
+        if (matchParam) return matchParam[1];
+
+        const parsed = new URL(cleanUrl.startsWith("http") ? cleanUrl : "https://" + cleanUrl);
+        const segments = parsed.pathname.split("/").filter(Boolean);
+        for (let i = segments.length - 1; i >= 0; i--) {
+            const segClean = segments[i].split("?")[0].split("#")[0];
+            if (/^\d+$/.test(segClean)) return segClean;
+        }
+    } catch (e) {}
+    const matchRegex = cleanUrl.match(/(?:^|\/)(\d+)(?:$|[/?#])/);
+    return matchRegex ? matchRegex[1] : "";
+}
+
+async function resolveViaServer(inputVal) {
+    const serverBaseUrl = $("serverUrlInput").value.replace(/\/+$/, "");
+    try {
+        const resp = await fetch(`${serverBaseUrl}/resolve`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: currentMode, input: inputVal, url: inputVal })
+        });
+        if (resp.ok) return await resp.json();
+    } catch (e) {
+        console.error("API error:", e);
+    }
+    return { name: "Seitenname nicht öffentlich verfügbar", status: "Fehler", source: "error" };
+}
+
+processBtn.addEventListener("click", async () => {
+    processedResults = [];
+    resultBody.innerHTML = "";
+    allParsedEntries = [];
+
+    for (const f of loadedFiles) {
+        const text = await f.text();
+        text.split(/\r?\n/).forEach(line => {
+            line = line.trim();
+            if (line && !line.startsWith("#")) {
+                allParsedEntries.push(line);
+            }
+        });
+    }
+
+    if (!allParsedEntries.length) return;
+
+    isStopped = false;
+    processBtn.style.display = "none";
+    stopBtn.style.display = "inline-flex";
+    progressPanel.classList.add("visible");
+    resultsPanel.classList.add("visible");
+
+    const total = allParsedEntries.length;
+    for (let i = 0; i < total; i++) {
+        if (isStopped) break;
+
+        const line = allParsedEntries[i];
+        statusText.textContent = `Verarbeite Eintrag ${i + 1} von ${total}...`;
+
+        let localId = extractNumericId(line);
+        let res = {};
+
+        if (currentMode === "username_to_id" && localId) {
+            res = {
+                name: "–",
+                id: localId,
+                url: line.startsWith("http") ? line : `https://www.facebook.com/${localId}`,
+                source: "instant",
+                status: "OK"
+            };
+        } else {
+            res = await resolveViaServer(line);
+        }
+
+        const item = {
+            nr: i + 1,
+            url: res.url || line,
+            name: res.name || "–",
+            id: res.id || localId || "–",
+            source: res.source || "live",
+            status: res.status || "OK"
+        };
+
+        processedResults.push(item);
+        appendRow(item);
+
+        const pct = Math.round(((i + 1) / total) * 100);
+        progressBar.style.width = pct + "%";
+        progressPercent.textContent = pct + "%";
+        resultCount.textContent = processedResults.length;
+    }
+
+    stopBtn.style.display = "none";
+    processBtn.style.display = "inline-flex";
+    exportBtn.disabled = processedResults.length === 0;
+    statusText.textContent = "Verarbeitung abgeschlossen!";
+});
+
+stopBtn.addEventListener("click", () => { isStopped = true; });
+
+function appendRow(r) {
+    const tr = document.createElement("tr");
+    const badgeCls = r.status === "OK" ? "badge-ok" : "badge-warn";
+    
+    let srcBadge = `<span class="badge badge-ok">LIVE SCRAPE</span>`;
+    if (r.source === "cache") srcBadge = `<span class="badge badge-cache">DATABASE CACHE</span>`;
+    if (r.source === "instant") srcBadge = `<span class="badge badge-instant">INSTANT ID</span>`;
+
+    tr.innerHTML = `
+        <td class="row-number">${r.nr}</td>
+        <td><a class="url-link" href="${r.url}" target="_blank" style="color:#94a3b8">${r.url}</a></td>
+        <td>${r.name}</td>
+        <td class="numeric-id">${r.id}</td>
+        <td>${srcBadge}</td>
+        <td><span class="badge ${badgeCls}">${r.status}</span></td>
+    `;
+    resultBody.appendChild(tr);
+}
+
+exportBtn.addEventListener("click", () => {
+    const lines = [["Nr", "Link", "Seitenname", "ID", "Quelle", "Status"].join(";")];
+    processedResults.forEach(r => {
+        lines.push([r.nr, r.url, r.name, r.id, r.source, r.status].map(v => `"${v}"`).join(";"));
+    });
+    const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "facebook-ergebnisse.csv";
+    a.click();
+});
+</script>
+</body>
+</html>
