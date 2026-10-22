@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b1220" />
-    <title>Social Media Entity Resolver – Multi-Platform Web App</title>
+    <title>Social Media Entity Resolver – FB, IG & Twitter/X</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +101,7 @@
             flex: 1;
         }
 
-        .intro { margin-bottom: 24px; }
+        .intro { margin-bottom: 20px; }
 
         .eyebrow {
             margin: 0 0 8px;
@@ -114,19 +114,72 @@
 
         .intro h2 {
             margin: 0;
-            font-size: clamp(24px, 3.5vw, 36px);
+            font-size: clamp(22px, 3vw, 32px);
             letter-spacing: -0.03em;
             color: #f1f5f9;
         }
 
-        .platform-selection, .mode-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
+        .section-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .platform-card, .mode-card {
+        /* Platform Selection Grid */
+        .platform-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .platform-card {
+            border: 2px solid #223249;
+            border-radius: 12px;
+            background: #0d1726;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .platform-card:hover { border-color: #3a82f6; background: #12223c; }
+        .platform-card.active {
+            border-color: #2773e8;
+            background: #12223c;
+            box-shadow: 0 0 16px rgba(39, 115, 232, 0.25);
+        }
+
+        .platform-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .platform-fb { background: #1877f2; color: #fff; }
+        .platform-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
+        .platform-tw { background: #1da1f2; color: #fff; }
+
+        .platform-name { font-size: 14px; font-weight: 700; color: #f1f5f9; }
+
+        /* Mode Selection Cards */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .mode-card {
             border: 2px solid #223249;
             border-radius: 12px;
             background: #0d1726;
@@ -138,26 +191,22 @@
             gap: 8px;
         }
 
-        .platform-card:hover, .mode-card:hover {
-            border-color: #3a82f6;
-            background: #12223c;
-        }
-
-        .platform-card.active, .mode-card.active {
+        .mode-card:hover { border-color: #3a82f6; background: #12223c; }
+        .mode-card.active {
             border-color: #2773e8;
             background: #12223c;
             box-shadow: 0 0 16px rgba(39, 115, 232, 0.25);
         }
 
-        .card-header {
+        .mode-card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .card-title { font-size: 15px; font-weight: 700; color: #f1f5f9; }
+        .mode-title { font-size: 15px; font-weight: 700; color: #f1f5f9; }
 
-        .badge-tag {
+        .mode-badge {
             font-size: 11px;
             font-weight: 700;
             padding: 2px 8px;
@@ -167,7 +216,7 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .card-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+        .mode-desc { font-size: 12px; color: #94a3b8; line-height: 1.5; }
 
         .panel {
             border: 1px solid #253145;
@@ -178,6 +227,13 @@
         }
 
         .upload-panel { padding: 28px; }
+
+        .panel-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
 
         .panel-heading h3 { margin: 0; font-size: 17px; font-weight: 700; color: #f8fafc; }
         .panel-heading p { margin: 6px 0 0; color: #91a0b5; font-size: 13px; }
@@ -208,7 +264,7 @@
         .dropzone {
             position: relative;
             display: flex;
-            min-height: 120px;
+            min-height: 130px;
             margin-top: 20px;
             padding: 20px;
             flex-direction: column;
@@ -254,7 +310,7 @@
         .actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 22px; }
         .button-group { display: flex; gap: 10px; }
 
-        .primary-button, .pause-button, .stop-button, .export-button {
+        .primary-button, .pause-button, .resume-button, .stop-button, .export-button {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             border: 0; border-radius: 999px; font-size: 13px; font-weight: 650; padding: 10px 22px;
             transition: all 0.2s ease;
@@ -263,14 +319,14 @@
         .primary-button { background: #2773e8; color: #ffffff; box-shadow: 0 4px 14px rgba(39, 115, 232, 0.35); }
         .primary-button:disabled { cursor: not-allowed; opacity: 0.45; }
         .pause-button { background: #d97706; color: #ffffff; }
-        .pause-button.resumed { background: #16a34a; }
+        .resume-button { background: #059669; color: #ffffff; }
         .stop-button { background: #dc2626; color: #ffffff; }
 
         .progress-panel { display: none; margin-top: 20px; padding: 20px 24px; }
         .progress-panel.visible { display: block; }
         .progress-top { display: flex; justify-content: space-between; color: #a9b8cc; font-size: 13px; }
         .progress-track { height: 8px; margin-top: 12px; border-radius: 999px; background: #1e2a3b; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #2773e8, #38daf0); transition: width 0.3s ease; }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #2773e8, #38daf0); }
 
         .results-panel { display: none; margin-top: 26px; overflow: hidden; }
         .results-panel.visible { display: block; }
@@ -303,70 +359,56 @@
 <header class="topbar">
     <div class="topbar-inner">
         <div class="brand">
-            <div class="brand-mark" id="brandMark">FB</div>
-            <h1 id="brandTitle">Social Media Entity Resolver</h1>
+            <div class="brand-mark">SE</div>
+            <h1>Social Media Entity Resolver</h1>
         </div>
-        <div class="topbar-note">MULTI-PLATFORM & SHARED CACHE</div>
+        <div class="topbar-note">MULTI-PLATFORM & CACHED</div>
     </div>
 </header>
 
 <main>
     <section class="intro">
-        <p class="eyebrow">Plattformauswahl</p>
-        <h2>1. Wählen Sie die Social-Media-Plattform:</h2>
+        <p class="eyebrow">Multi-Plattform Namens- & ID-Auflösung</p>
+        <h2>Wählen Sie Plattform und Extraktionsmodus:</h2>
     </section>
 
-    <!-- Platform Selection Cards -->
+    <!-- Platform Selection -->
+    <div class="section-label">1. Plattform auswählen:</div>
     <section class="platform-selection">
-        <div class="platform-card active" id="platformFbCard" onclick="selectPlatform('facebook')">
-            <div class="card-header">
-                <span class="card-title">Facebook</span>
-                <span class="badge-tag">FACEBOOK</span>
-            </div>
-            <div class="card-desc">Löst Facebook-Links, IDs und Seitennamen auf.</div>
+        <div class="platform-card active" id="platformFb" onclick="selectPlatform('facebook')">
+            <div class="platform-icon platform-fb">FB</div>
+            <span class="platform-name">Facebook</span>
         </div>
-
-        <div class="platform-card" id="platformIgCard" onclick="selectPlatform('instagram')">
-            <div class="card-header">
-                <span class="card-title">Instagram</span>
-                <span class="badge-tag">INSTAGRAM</span>
-            </div>
-            <div class="card-desc">Extrahiert Instagram Usernames & Account-Namen.</div>
+        <div class="platform-card" id="platformIg" onclick="selectPlatform('instagram')">
+            <div class="platform-icon platform-ig">IG</div>
+            <span class="platform-name">Instagram</span>
         </div>
-
-        <div class="platform-card" id="platformTwCard" onclick="selectPlatform('twitter')">
-            <div class="card-header">
-                <span class="card-title">Twitter / X</span>
-                <span class="badge-tag">TWITTER/X</span>
-            </div>
-            <div class="card-desc">Löst Twitter / X Handles und Profilnamen auf.</div>
+        <div class="platform-card" id="platformTw" onclick="selectPlatform('twitter')">
+            <div class="platform-icon platform-tw">X</div>
+            <span class="platform-name">Twitter / X</span>
         </div>
-    </section>
-
-    <section class="intro" style="margin-top: 32px;">
-        <p class="eyebrow">Extraktionsmodus</p>
-        <h2>2. Wählen Sie den gewünschten Modus:</h2>
     </section>
 
     <!-- Mode Cards -->
+    <div class="section-label">2. Modus auswählen:</div>
     <section class="mode-selection">
         <div class="mode-card active" id="modeUsernameToIdCard" onclick="selectMode('username_to_id')">
-            <div class="card-header">
-                <span class="card-title">1. Link / Name &rarr; ID / Username</span>
-                <span class="badge-tag">SOFORT &middot; SCHNELL</span>
+            <div class="mode-card-header">
+                <span class="mode-title">1. Link / Handle &rarr; ID</span>
+                <span class="mode-badge">SOFORT &middot; SCHNELL</span>
             </div>
-            <div class="card-desc">
-                Extrahiert Identifikatoren direkt aus hochgeladenen Links oder Namen.
+            <div class="mode-desc">
+                Extrahiert numerische IDs oder Handle-IDs direkt aus Links oder Dateizeilen.
             </div>
         </div>
 
         <div class="mode-card" id="modeIdToUsernameCard" onclick="selectMode('id_to_username')">
-            <div class="card-header">
-                <span class="card-title">2. Link / ID &rarr; Profilname</span>
-                <span class="badge-tag">LIVE SCRAPE / DB CACHE</span>
+            <div class="mode-card-header">
+                <span class="mode-title">2. Link / ID &rarr; Account Name</span>
+                <span class="mode-badge">LIVE SCRAPE / DB CACHE</span>
             </div>
-            <div class="card-desc">
-                Ruft den echten Profil- / Seitennamen live oder aus dem zentralen Datenbank-Cache ab.
+            <div class="mode-desc">
+                Ermittelt zu jedem Link oder ID den Kontonamen live oder aus dem gemeinsamen DB-Cache.
             </div>
         </div>
     </section>
@@ -376,13 +418,13 @@
         <div class="panel-heading">
             <div>
                 <h3>Dateien hinzufügen</h3>
-                <p id="modeInstructionText">Dateien mit Facebook-Links oder Kanalnamen hochladen.</p>
+                <p id="modeInstructionText">Dateien mit Links oder Handles hochladen.</p>
             </div>
         </div>
 
         <div class="server-config-box">
-            <label for="serverUrlInput">API-Server URL (Ihr VPS / ngrok):</label>
-            <input type="text" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" placeholder="https://ihre-server-url.ngrok-free.dev" />
+            <label for="serverUrlInput">API-Server URL (Ihr Backend / VPS / ngrok):</label>
+            <input type="text" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" placeholder="https://cradle-majesty-diffuser.ngrok-free.dev" />
         </div>
 
         <form id="uploadForm" onsubmit="return false;">
@@ -401,6 +443,7 @@
                 <div></div>
                 <div class="button-group">
                     <button class="pause-button" id="pauseBtn" type="button" style="display:none;">Pausieren</button>
+                    <button class="resume-button" id="resumeBtn" type="button" style="display:none;">Fortsetzen</button>
                     <button class="stop-button" id="stopBtn" type="button" style="display:none;">Stoppen</button>
                     <button class="primary-button" id="processBtn" type="button" disabled>
                         <span>Verarbeitung starten</span>
@@ -434,9 +477,9 @@
                     <tr>
                         <th style="width: 70px;">#</th>
                         <th>Plattform</th>
-                        <th>Link</th>
-                        <th>Seitenname / Profil</th>
-                        <th>ID / Handle</th>
+                        <th>Link / Input</th>
+                        <th>Account Name / Channel</th>
+                        <th>ID</th>
                         <th>Quelle</th>
                         <th>Status</th>
                     </tr>
@@ -450,8 +493,10 @@
 <script>
 const $ = id => document.getElementById(id);
 const fileInput = $("fileInput");
+const dropzone = $("dropzone");
 const fileList = $("fileList");
 const pauseBtn = $("pauseBtn");
+const resumeBtn = $("resumeBtn");
 const stopBtn = $("stopBtn");
 const processBtn = $("processBtn");
 const progressPanel = $("progressPanel");
@@ -468,18 +513,17 @@ let currentMode = "username_to_id";
 let loadedFiles = [];
 let processedResults = [];
 let allParsedEntries = [];
+
+// Loop State Control
+let currentIndex = 0;
 let isStopped = false;
 let isPaused = false;
-let currentIndex = 0;
 
 function selectPlatform(platform) {
     currentPlatform = platform;
-    $("platformFbCard").classList.toggle("active", platform === "facebook");
-    $("platformIgCard").classList.toggle("active", platform === "instagram");
-    $("platformTwCard").classList.toggle("active", platform === "twitter");
-    
-    const brandMap = { facebook: "FB", instagram: "IG", twitter: "X" };
-    $("brandMark").textContent = brandMap[platform] || "FB";
+    $("platformFb").classList.toggle("active", platform === "facebook");
+    $("platformIg").classList.toggle("active", platform === "instagram");
+    $("platformTw").classList.toggle("active", platform === "twitter");
 }
 
 function selectMode(mode) {
@@ -505,24 +549,6 @@ fileInput.addEventListener("change", () => {
     renderFiles();
 });
 
-function extractNumericId(url) {
-    if (!url) return "";
-    const cleanUrl = url.trim();
-    try {
-        const matchParam = cleanUrl.match(/[?&]id=(\d+)/i);
-        if (matchParam) return matchParam[1];
-
-        const parsed = new URL(cleanUrl.startsWith("http") ? cleanUrl : "https://" + cleanUrl);
-        const segments = parsed.pathname.split("/").filter(Boolean);
-        for (let i = segments.length - 1; i >= 0; i--) {
-            const segClean = segments[i].split("?")[0].split("#")[0];
-            if (/^\d+$/.test(segClean)) return segClean;
-        }
-    } catch (e) {}
-    const matchRegex = cleanUrl.match(/(?:^|\/)(\d+)(?:$|[/?#])/);
-    return matchRegex ? matchRegex[1] : "";
-}
-
 const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 async function resolveViaServer(inputVal) {
@@ -531,11 +557,11 @@ async function resolveViaServer(inputVal) {
         const resp = await fetch(`${serverBaseUrl}/resolve`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                platform: currentPlatform,
-                mode: currentMode,
-                input: inputVal,
-                url: inputVal
+            body: JSON.stringify({ 
+                platform: currentPlatform, 
+                mode: currentMode, 
+                input: inputVal, 
+                url: inputVal 
             })
         });
         if (resp.ok) return await resp.json();
@@ -549,6 +575,7 @@ processBtn.addEventListener("click", async () => {
     processedResults = [];
     resultBody.innerHTML = "";
     allParsedEntries = [];
+    currentIndex = 0;
 
     for (const f of loadedFiles) {
         const text = await f.text();
@@ -564,56 +591,55 @@ processBtn.addEventListener("click", async () => {
 
     isStopped = false;
     isPaused = false;
-    currentIndex = 0;
 
     processBtn.style.display = "none";
     pauseBtn.style.display = "inline-flex";
-    pauseBtn.textContent = "Pausieren";
-    pauseBtn.classList.remove("resumed");
+    resumeBtn.style.display = "none";
     stopBtn.style.display = "inline-flex";
 
     progressPanel.classList.add("visible");
     resultsPanel.classList.add("visible");
 
-    await processLoop();
+    runBatchLoop();
 });
 
-async function processLoop() {
+pauseBtn.addEventListener("click", () => {
+    isPaused = true;
+    pauseBtn.style.display = "none";
+    resumeBtn.style.display = "inline-flex";
+    statusText.textContent = "Verarbeitung pausiert...";
+});
+
+resumeBtn.addEventListener("click", () => {
+    isPaused = false;
+    resumeBtn.style.display = "none";
+    pauseBtn.style.display = "inline-flex";
+    runBatchLoop();
+});
+
+stopBtn.addEventListener("click", () => {
+    isStopped = true;
+    isPaused = false;
+    finishProcessing("Verarbeitung gestoppt.");
+});
+
+async function runBatchLoop() {
     const total = allParsedEntries.length;
 
     while (currentIndex < total) {
         if (isStopped) break;
-
-        if (isPaused) {
-            statusText.textContent = `Pausiert bei Eintrag ${currentIndex + 1} von ${total}. Klicken Sie auf "Fortsetzen".`;
-            await sleep(500);
-            continue;
-        }
+        if (isPaused) return; // Exit loop, waiting for resume
 
         const line = allParsedEntries[currentIndex];
-        statusText.textContent = `Verarbeite Eintrag ${currentIndex + 1} von ${total}...`;
+        statusText.textContent = `Verarbeite Eintrag ${currentIndex + 1} von ${total}... (${currentPlatform.toUpperCase()})`;
 
-        let localId = extractNumericId(line);
-        let res = {};
+        let res = await resolveViaServer(line);
 
-        if (currentMode === "username_to_id" && localId) {
-            res = {
-                name: "–",
-                id: localId,
-                url: line.startsWith("http") ? line : `https://www.${currentPlatform}.com/${localId}`,
-                source: "instant",
-                status: "OK"
-            };
-        } else {
-            res = await resolveViaServer(line);
-
-            // ANTI-BLOCKING / RATE-LIMIT PROTECTION:
-            // Add a randomized delay (2.5 - 4.5 sec) if live scrape was performed to avoid blocking.
-            if (res.source === "live") {
-                statusText.textContent = `Eintrag ${currentIndex + 1} per Live-Scrape geholt. Warte Pause (Schutz vor Facebook-Sperre)...`;
-                const randomPause = Math.floor(Math.random() * 2000) + 2500;
-                await sleep(randomPause);
-            }
+        // Anti-blocking pause: If live scrape, delay 2.5s - 4.5s to prevent Facebook/IG/Twitter bans
+        if (res.source === "live" && currentIndex < total - 1) {
+            const randomDelay = Math.floor(Math.random() * 2000) + 2500;
+            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) um Rate-Limits zu vermeiden...`;
+            await sleep(randomDelay);
         }
 
         const item = {
@@ -621,7 +647,7 @@ async function processLoop() {
             platform: currentPlatform.toUpperCase(),
             url: res.url || line,
             name: res.name || "–",
-            id: res.id || localId || "–",
+            id: res.id || "–",
             source: res.source || "live",
             status: res.status || "OK"
         };
@@ -630,37 +656,25 @@ async function processLoop() {
         appendRow(item);
 
         currentIndex++;
-
         const pct = Math.round((currentIndex / total) * 100);
         progressBar.style.width = pct + "%";
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
     }
 
-    if (!isPaused || isStopped) {
-        stopBtn.style.display = "none";
-        pauseBtn.style.display = "none";
-        processBtn.style.display = "inline-flex";
-        exportBtn.disabled = processedResults.length === 0;
-        statusText.textContent = isStopped ? "Verarbeitung gestoppt!" : "Verarbeitung abgeschlossen!";
+    if (currentIndex >= total) {
+        finishProcessing("Verarbeitung abgeschlossen!");
     }
 }
 
-pauseBtn.addEventListener("click", () => {
-    isPaused = !isPaused;
-    if (isPaused) {
-        pauseBtn.textContent = "Fortsetzen";
-        pauseBtn.classList.add("resumed");
-    } else {
-        pauseBtn.textContent = "Pausieren";
-        pauseBtn.classList.remove("resumed");
-    }
-});
-
-stopBtn.addEventListener("click", () => {
-    isStopped = true;
-    isPaused = false;
-});
+function finishProcessing(msg) {
+    pauseBtn.style.display = "none";
+    resumeBtn.style.display = "none";
+    stopBtn.style.display = "none";
+    processBtn.style.display = "inline-flex";
+    exportBtn.disabled = processedResults.length === 0;
+    statusText.textContent = msg;
+}
 
 function appendRow(r) {
     const tr = document.createElement("tr");
@@ -672,7 +686,7 @@ function appendRow(r) {
 
     tr.innerHTML = `
         <td class="row-number">${r.nr}</td>
-        <td><span class="badge badge-tag">${r.platform}</span></td>
+        <td><strong style="font-size:11px; color:#60a5fa;">${r.platform}</strong></td>
         <td><a class="url-link" href="${r.url}" target="_blank" style="color:#94a3b8">${r.url}</a></td>
         <td>${r.name}</td>
         <td class="numeric-id">${r.id}</td>
@@ -683,11 +697,11 @@ function appendRow(r) {
 }
 
 exportBtn.addEventListener("click", () => {
-    const lines = [["Nr", "Plattform", "Link", "Seitenname", "ID", "Quelle", "Status"].join(";")];
+    const lines = [["Nr", "Plattform", "Link", "Account Name", "ID", "Quelle", "Status"].join(";")];
     processedResults.forEach(r => {
         lines.push([r.nr, r.platform, r.url, r.name, r.id, r.source, r.status].map(v => `"${v}"`).join(";"));
     });
-    const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "type/csv;charset=utf-8" });
+    const blob = new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `${currentPlatform}-ergebnisse.csv`;
