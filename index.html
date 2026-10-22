@@ -467,7 +467,6 @@ async function runBatchLoop() {
 
         let res = await resolveViaServer(line);
 
-        // STRICT CHECK: ID MUST BE 100% NUMERIC DIGITS ONLY
         let displayId = (res.id && /^\d+$/.test(res.id)) ? res.id : "–";
 
         const item = {
@@ -489,7 +488,6 @@ async function runBatchLoop() {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
-        // Human-like pause (3.0s - 5.0s) during live scrapes to prevent IP blocking
         if (currentIndex < total && !isStopped && !isPaused && res.source === "live") {
             const randomDelay = Math.floor(Math.random() * 2000) + 3000;
             statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Live-Eintrag...`;
@@ -551,7 +549,6 @@ exportBtn.addEventListener("click", () => {
 });
 
 talkwalkerBtn.addEventListener("click", () => {
-    // EXPORT STRICTLY NUMERIC AUTHOR IDs ONLY (/^\d+$/)
     const validIds = processedResults
         .map(r => r.id)
         .filter(id => id && id !== "–" && /^\d+$/.test(id));
