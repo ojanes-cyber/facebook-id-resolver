@@ -489,9 +489,9 @@ async function runBatchLoop() {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
-        // Human-like pause (5.0s - 7.0s) during live scrapes to prevent IP blocking
+        // Human-like pause (3.0s - 5.0s) during live scrapes to prevent IP blocking
         if (currentIndex < total && !isStopped && !isPaused && res.source === "live") {
-            const randomDelay = Math.floor(Math.random() * 2000) + 5000;
+            const randomDelay = Math.floor(Math.random() * 2000) + 3000;
             statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Live-Eintrag...`;
             await sleep(randomDelay);
         }
