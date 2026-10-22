@@ -242,6 +242,7 @@
             <div class="actions">
                 <div>
                     <button class="clear-button" id="clearFilesBtn" type="button" style="display:none;">Alles entfernen</button>
+                    <button class="clear-button" id="clearCacheBtn" type="button" style="background:#475569; color:#f8fafc; border-color:#64748b; margin-left:8px;">Cache leeren</button>
                 </div>
                 <div class="button-group">
                     <button class="pause-button" id="pauseBtn" type="button" style="display:none;">Pausieren</button>
@@ -354,6 +355,27 @@ function renderFiles() {
     }
 }
 
+const clearCacheBtn = $("clearCacheBtn");
+if (clearCacheBtn) {
+    clearCacheBtn.addEventListener("click", async () => {
+        if (!confirm("Möchten Sie den gesamten Datenbank-Cache wirklich leeren?")) return;
+        const serverBaseUrl = $("serverUrlInput").value.replace(/\/+$/, "");
+        try {
+            const resp = await fetch(`${serverBaseUrl}/clear_cache`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
+                }
+            });
+            const data = await resp.json();
+            alert(data.message || "Cache geleert!");
+        } catch (e) {
+            alert("Fehler beim Leeren des Caches.");
+        }
+    });
+}
+
 clearFilesBtn.addEventListener("click", () => {
     loadedFiles = [];
     fileInput.value = "";
@@ -456,7 +478,7 @@ async function runBatchLoop() {
         let res = await resolveViaServer(line);
 
         let displayId = res.id;
-        if (!displayId || displayId === res.name || !/^\d+$/.test(displayId)) {
+        if (!displayId || displayId === "–") {
             displayId = "–";
         }
 
@@ -479,7 +501,6 @@ async function runBatchLoop() {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
-        // Force strict 3.5s to 5.0s pause between every live lookup!
         if (currentIndex < total && !isStopped && !isPaused && res.source === "live") {
             const randomDelay = Math.floor(Math.random() * 1500) + 3500;
             statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Live-Eintrag...`;
@@ -545,10 +566,10 @@ exportBtn.addEventListener("click", () => {
 talkwalkerBtn.addEventListener("click", () => {
     const validIds = processedResults
         .map(r => r.id)
-        .filter(id => id && id !== "–" && id !== "" && /^\d+$/.test(id));
+        .filter(id => id && id !== "–" && id !== "");
 
     if (!validIds.length) {
-        alert("Keine gültigen numerischen Author IDs zum Exportieren vorhanden.");
+        alert("Keine gültigen Author IDs zum Exportieren vorhanden.");
         return;
     }
 
