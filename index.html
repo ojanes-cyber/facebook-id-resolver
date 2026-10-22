@@ -238,29 +238,6 @@
         .panel-heading h3 { margin: 0; font-size: 17px; font-weight: 700; color: #f8fafc; }
         .panel-heading p { margin: 6px 0 0; color: #91a0b5; font-size: 13px; }
 
-        .server-config-box {
-            margin-top: 18px;
-            padding: 16px;
-            border: 1px solid #1e3a5f;
-            border-radius: 12px;
-            background: #0c192d;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .server-config-box label { font-size: 12px; font-weight: 700; color: #60a5fa; }
-        .server-config-box input {
-            padding: 8px 12px;
-            border: 1px solid #223249;
-            border-radius: 8px;
-            background: #09111e;
-            color: #ffffff;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            outline: none;
-        }
-
         .dropzone {
             position: relative;
             display: flex;
@@ -422,10 +399,8 @@
             </div>
         </div>
 
-        <div class="server-config-box">
-            <label for="serverUrlInput">API-Server URL (Ihr Backend / VPS / ngrok):</label>
-            <input type="text" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" placeholder="https://cradle-majesty-diffuser.ngrok-free.dev" />
-        </div>
+        <!-- Hidden Server URL Field -->
+        <input type="hidden" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" />
 
         <form id="uploadForm" onsubmit="return false;">
             <label class="dropzone" id="dropzone" for="fileInput">
