@@ -628,19 +628,12 @@ async function runBatchLoop() {
 
     while (currentIndex < total) {
         if (isStopped) break;
-        if (isPaused) return; // Exit loop, waiting for resume
+        if (isPaused) return;
 
         const line = allParsedEntries[currentIndex];
         statusText.textContent = `Verarbeite Eintrag ${currentIndex + 1} von ${total}... (${currentPlatform.toUpperCase()})`;
 
         let res = await resolveViaServer(line);
-
-        // Anti-blocking pause: If live scrape, delay 2.5s - 4.5s to prevent Facebook/IG/Twitter bans
-        if (res.source === "live" && currentIndex < total - 1) {
-            const randomDelay = Math.floor(Math.random() * 2000) + 2500;
-            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) um Rate-Limits zu vermeiden...`;
-            await sleep(randomDelay);
-        }
 
         const item = {
             nr: currentIndex + 1,
@@ -660,6 +653,13 @@ async function runBatchLoop() {
         progressBar.style.width = pct + "%";
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
+
+        // Anti-blocking pause: If live scrape, delay 3.0s - 5.0s before processing next entry
+        if (res.source === "live" && currentIndex < total && !isStopped && !isPaused) {
+            const randomDelay = Math.floor(Math.random() * 2000) + 3000;
+            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) um Rate-Limits zu vermeiden...`;
+            await sleep(randomDelay);
+        }
     }
 
     if (currentIndex >= total) {
