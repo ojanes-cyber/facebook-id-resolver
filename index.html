@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#0b1220" />
     <title>Social Media Entity Resolver – FB, IG & Twitter/X</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap)" rel="stylesheet">
 
     <style>
         :root {
@@ -211,7 +211,7 @@
             </div>
         </div>
 
-        <input type="hidden" id="serverUrlInput" value="https://cradle-majesty-diffuser.ngrok-free.dev" />
+        <input type="hidden" id="serverUrlInput" value="[https://cradle-majesty-diffuser.ngrok-free.dev](https://cradle-majesty-diffuser.ngrok-free.dev)" />
 
         <form id="uploadForm" onsubmit="return false;">
             <label class="dropzone" id="dropzone" for="fileInput">
@@ -438,6 +438,7 @@ processBtn.addEventListener("click", async () => {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
+        // Human-like pause (5.0s - 7.0s) during live scrapes to prevent IP blocking
         if (i < total - 1 && res.source === "live") {
             const randomDelay = Math.floor(Math.random() * 2000) + 5000;
             statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Live-Eintrag...`;
