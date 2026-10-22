@@ -455,12 +455,18 @@ async function runBatchLoop() {
 
         let res = await resolveViaServer(line);
 
+        // Nur echte numerische IDs anzeigen, sonst Strich
+        let displayId = res.id;
+        if (!displayId || displayId === res.name || !/^\d+$/.test(displayId)) {
+            displayId = "–";
+        }
+
         const item = {
             nr: currentIndex + 1,
             platform: currentPlatform.toUpperCase(),
             url: res.url || line,
             name: res.name || "–",
-            id: res.id || "–",
+            id: displayId,
             source: res.source || "live",
             status: res.status || "OK"
         };
@@ -515,7 +521,6 @@ function appendRow(r) {
     `;
     resultBody.appendChild(tr);
 
-    // Auto-scrolling to newly added row when active
     const autoScrollToggle = $("autoScrollToggle");
     if (autoScrollToggle && autoScrollToggle.checked) {
         const tableWrap = document.querySelector(".table-wrap");
@@ -540,10 +545,10 @@ exportBtn.addEventListener("click", () => {
 talkwalkerBtn.addEventListener("click", () => {
     const validIds = processedResults
         .map(r => r.id)
-        .filter(id => id && id !== "–" && id !== "");
+        .filter(id => id && id !== "–" && id !== "" && /^\d+$/.test(id));
 
     if (!validIds.length) {
-        alert("Keine gültigen Author IDs zum Exportieren vorhanden.");
+        alert("Keine gültigen numerischen Author IDs zum Exportieren vorhanden.");
         return;
     }
 
