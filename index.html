@@ -455,7 +455,6 @@ async function runBatchLoop() {
 
         let res = await resolveViaServer(line);
 
-        // Nur echte numerische IDs anzeigen, sonst Strich
         let displayId = res.id;
         if (!displayId || displayId === res.name || !/^\d+$/.test(displayId)) {
             displayId = "–";
@@ -480,9 +479,10 @@ async function runBatchLoop() {
         progressPercent.textContent = pct + "%";
         resultCount.textContent = processedResults.length;
 
-        if (currentIndex < total && !isStopped && !isPaused && currentMode === "id_to_username" && res.source !== "cache") {
+        // Force strict 3.5s to 5.0s pause between every live lookup!
+        if (currentIndex < total && !isStopped && !isPaused && res.source === "live") {
             const randomDelay = Math.floor(Math.random() * 1500) + 3500;
-            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Eintrag...`;
+            statusText.textContent = `Wartezeit (${(randomDelay / 1000).toFixed(1)}s) vor nächstem Live-Eintrag...`;
             await sleep(randomDelay);
         }
     }
